@@ -97,7 +97,7 @@ public class AccountManagementClient {
     return UriComponentsBuilder.fromUriString(clusterUri).path(loginUri).build().toUriString();
   }
 
-  private String getHostName(){
+  public String getHostName(){
     String source;
     try {
       source = InetAddress.getLocalHost().getHostName();
