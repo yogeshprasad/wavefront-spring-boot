@@ -1,6 +1,8 @@
 package com.wavefront.spring.account;
 
+import java.net.InetAddress;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.time.Duration;
 import java.util.Map;
 
@@ -78,6 +80,8 @@ public class AccountManagementClient {
   private URI accountManagementUri(String clusterUri, ApplicationTags applicationTags) {
     UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUriString(clusterUri)
         .path("/api/v2/trial/spring-boot-autoconfigure")
+        .queryParam("source", getHostName())
+        .queryParam("referer", "v1.1")
         .queryParam("application", applicationTags.getApplication())
         .queryParam("service", applicationTags.getService());
     if (applicationTags.getCluster() != null) {
@@ -93,4 +97,14 @@ public class AccountManagementClient {
     return UriComponentsBuilder.fromUriString(clusterUri).path(loginUri).build().toUriString();
   }
 
+  private String getHostName(){
+    String source;
+    try {
+      source = InetAddress.getLocalHost().getHostName();
+    } catch (UnknownHostException e) {
+      // Should never happen
+      source = "unknown";
+    }
+    return source;
+  }
 }
